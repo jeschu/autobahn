@@ -1,0 +1,1061 @@
+openapi: 3.0.0
+info:
+  description: |
+    Was passiert auf Deutschlands Bundesstraßen? API für aktuelle Verwaltungsdaten zu Baustellen, Staus und Ladestationen. Außerdem Zugang zu Verkehrsüberwachungskameras und vielen weiteren Datensätzen.
+  title: Autobahn App API
+  version: 1.0.1
+externalDocs:
+  description: Weiterführende Dokumentation
+  url: https://github.com/bundesAPI/autobahn-api/blob/main/README.md
+servers:
+- url: https://verkehr.autobahn.de/o/autobahn
+paths:
+  /:
+    get:
+      description: Gibt eine Liste der verfügbaren Autobahnen zurück.
+      operationId: list-autobahnen
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Roads'
+          description: Success
+      summary: Liste verfügbarer Autobahnen
+  /{roadId}/services/roadworks:
+    get:
+      description: Gibt eine Liste der aktuellen Baustellen zu einer Autobahn zurück.
+      operationId: list-roadworks
+      parameters:
+      - explode: false
+        in: path
+        name: roadId
+        required: true
+        schema:
+          $ref: '#/components/schemas/RoadId'
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Roadworks'
+          description: Success
+        "204":
+          description: Not found.
+        "400":
+          description: Internal server error.
+        "404":
+          description: Not found.
+      summary: Liste aktueller Baustellen
+  /details/roadworks/{roadworkId}:
+    get:
+      description: Gibt Details zu einer konkreten Baustelle zurück.
+      operationId: get-roadwork
+      parameters:
+      - explode: false
+        in: path
+        name: roadworkId
+        required: true
+        schema:
+          example: !!binary |-
+            VWs5QlJGZFBVa3RUWDE5dFpHMHVibmRmWHpBeUxUZ3dNREF3SUVRZ056RWdNVGtnTURrdlMweENW
+            MUpP
+          format: byte
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Roadwork'
+          description: Success
+        "204":
+          description: Not found.
+        "400":
+          description: Internal server error.
+        "404":
+          description: Not found.
+      summary: Details einer Baustelle
+  /{roadId}/services/webcam:
+    get:
+      description: Gibt eine Liste der Webcams zu einer Autobahn zurück.
+      operationId: list-webcams
+      parameters:
+      - explode: false
+        in: path
+        name: roadId
+        required: true
+        schema:
+          $ref: '#/components/schemas/RoadId'
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webcams'
+          description: Success
+        "204":
+          description: Not found.
+        "400":
+          description: Internal server error.
+        "404":
+          description: Not found.
+      summary: Liste verfügbarer Webcams
+  /details/webcam/{webcamId}:
+    get:
+      description: Gibt Details einer konkreten Webcam zurück.
+      operationId: get-webcam
+      parameters:
+      - explode: false
+        in: path
+        name: webcamId
+        required: true
+        schema:
+          example: !!binary |-
+            VjBWQ1EwRk5YMTlPVWxkZlUybHNZUzFUYVdkdVlXeGlZWFZmTVRBeE1EZ3hOREUzTWpNNE9EWXpP
+            VGs1TVRVPQ==
+          format: byte
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webcam'
+          description: Success
+        "204":
+          description: Not found.
+        "400":
+          description: Internal server error.
+        "404":
+          description: Not found.
+      summary: Details einer Webcam
+  /{roadId}/services/parking_lorry:
+    get:
+      description: Gibt eine Liste der Rastplätze zu einer Autobahn zurück.
+      operationId: list-parking-lorries
+      parameters:
+      - explode: false
+        in: path
+        name: roadId
+        required: true
+        schema:
+          $ref: '#/components/schemas/RoadId'
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParkingLorries'
+          description: Success
+        "204":
+          description: Not found.
+        "400":
+          description: Internal server error.
+        "404":
+          description: Not found.
+      summary: Liste verfügbarer Rastplätze
+  /details/parking_lorry/{lorryId}:
+    get:
+      description: Gibt Details eines konkreten Rastplatzes zurück.
+      operationId: get-parking-lorry
+      parameters:
+      - explode: false
+        in: path
+        name: lorryId
+        required: true
+        schema:
+          example: !!binary |-
+            VUVGU1MwbE9SMTlmYldSdExteHZjbko1TG5CaGNtdHBibWRmWDBSRkxWTklMVEF3TVRFd09BPT0=
+          format: byte
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParkingLorry'
+          description: Success
+        "204":
+          description: Not found.
+        "400":
+          description: Internal server error.
+        "404":
+          description: Not found.
+      summary: Details eines Rastplatzes
+  /{roadId}/services/warning:
+    get:
+      description: Gibt eine Liste der Verkehrsmeldungen zu einer Autobahn zurück.
+      operationId: list-warnings
+      parameters:
+      - explode: false
+        in: path
+        name: roadId
+        required: true
+        schema:
+          $ref: '#/components/schemas/RoadId'
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Warnings'
+          description: Success
+        "204":
+          description: Not found.
+        "400":
+          description: Internal server error.
+        "404":
+          description: Not found.
+      summary: Liste aktueller Verkehrsmeldungen
+  /details/warning/{warningId}:
+    get:
+      description: Gibt Details zu einer konkreten Verkehrsmeldung zurück.
+      operationId: get-warning
+      parameters:
+      - explode: false
+        in: path
+        name: warningId
+        required: true
+        schema:
+          example: !!binary |-
+            VjBGU1RrbE9SMTlmYldSdExuWnBlbDlmVEUxVExVNVhMM0pmVEUxVExVNVhMek15TkRFM09WOUVJ
+            Q0JPVnlCTVRWTXRUbGN1TUE9PQ==
+          format: byte
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Warning'
+          description: Success
+        "204":
+          description: Not found.
+        "400":
+          description: Internal server error.
+        "404":
+          description: Not found.
+      summary: Details zu einer Verkehrsmeldung
+  /{roadId}/services/closure:
+    get:
+      description: Gibt eine Liste der Sperrungen zu einer Autobahn zurück.
+      operationId: list-closures
+      parameters:
+      - explode: false
+        in: path
+        name: roadId
+        required: true
+        schema:
+          $ref: '#/components/schemas/RoadId'
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Closures'
+          description: Success
+        "204":
+          description: Not found.
+        "400":
+          description: Internal server error.
+        "404":
+          description: Not found.
+      summary: Liste aktueller Sperrungen
+  /details/closure/{closureId}:
+    get:
+      description: Gibt Details zu einer konkreten Sperrung zurück.
+      operationId: get-closure
+      parameters:
+      - explode: false
+        in: path
+        name: closureId
+        required: true
+        schema:
+          example: !!binary |-
+            UTB4UFUxVlNSVjlmYldSdExuWnBlbDlmVEUxVExVNVhMM0pmVkVsRExVNVNWMEpNU3k4ek9TOU9V
+            bGRDVEVzdk1UQWdNelVnTWpFZ1JDQXdPVEkwTWkwd01WOUVJQ0JPVnlCTVRWTXRUbGN1TUE9PQ==
+          format: byte
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Closure'
+          description: Success
+        "204":
+          description: Not found.
+        "400":
+          description: Internal server error.
+        "404":
+          description: Not found.
+      summary: Details zu einer Sperrung
+  /{roadId}/services/electric_charging_station:
+    get:
+      description: Gibt eine Liste der Ladestationen zu einer Autobahn zurück.
+      operationId: list-charging-stations
+      parameters:
+      - explode: false
+        in: path
+        name: roadId
+        required: true
+        schema:
+          $ref: '#/components/schemas/RoadId'
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ElectricChargingStations'
+          description: Success
+        "204":
+          description: Not found.
+        "400":
+          description: Internal server error.
+        "404":
+          description: Not found.
+      summary: Liste aktueller Ladestationen
+  /details/electric_charging_station/{stationId}:
+    get:
+      description: Gibt Details zu einer konkreten Ladestation zurück.
+      operationId: get-charging-station
+      parameters:
+      - explode: false
+        in: path
+        name: stationId
+        required: true
+        schema:
+          example: !!binary |-
+            UlV4RlExUlNTVU5mUTBoQlVrZEpUa2RmVTFSQlZFbFBUbDlmTVRjek16TT0=
+          format: byte
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ElectricChargingStation'
+          description: Success
+        "204":
+          description: Not found.
+        "400":
+          description: Internal server error.
+        "404":
+          description: Not found.
+      summary: Details zu einer Ladestation
+components:
+  schemas:
+    Roads:
+      example:
+        roads:
+        - A1
+        - A1
+      properties:
+        roads:
+          items:
+            $ref: '#/components/schemas/RoadId'
+          type: array
+      type: object
+    RoadId:
+      example: A1
+      pattern: "A[1-9]([0-9]{1,3})?(\\/A[1-9]{1,3})?"
+      type: string
+    Extent:
+      example: "10.728384054665147,54.00605746113356,10.775848767524598,54.09436740278899"
+      pattern: "-?\\d+(?:\\.\\d+)?,\\s*-?\\d+(?:\\.\\d+)?,\\s*-?\\d+(?:\\.\\d+)?,\\\
+        s*-?\\d+(?:\\.\\d+)?"
+      type: string
+    Point:
+      example: "10.729057,54.006057"
+      pattern: "-?\\d+(?:\\.\\d+)?,\\s*-?\\d+(?:\\.\\d+)?"
+      type: string
+    Coordinate:
+      example:
+        lat: "54.006057"
+        long: "10.729057"
+      properties:
+        lat:
+          pattern: -?\d+(?:\.\d+)?
+          type: string
+        long:
+          pattern: -?\d+(?:\.\d+)?
+          type: string
+      type: object
+    LatLongValue:
+      pattern: -?\d+(?:\.\d+)?
+      type: string
+    Identifier:
+      format: byte
+      type: string
+    MultilineText:
+      example:
+      - "Beginn: 29.06.2021 09:00"
+      - "Ende: 28.11.2021 17:00"
+      - ""
+      - Art der Maßnahme:Asphaltdeckenerneuerung
+      - |-
+        Einschränkungen:Es steht nur 1 Fahrstreifen zur Verfügung.
+
+        Vollsperrung der AS Eutin Ostseite vom 17.07.2021 - 15.09.2021.
+
+        Vollsperrung der AS Scharbeutz Ostseite vom 16.09.2021 - 17.11.2021.
+      - |
+        Maximale Durchfahrsbreite: 3.25
+      items:
+        type: string
+      type: array
+    IconRef:
+      type: string
+    DisplayType:
+      enum:
+      - ROADWORKS
+      - WEBCAM
+      - PARKING
+      - WARNING
+      - WEIGHT_LIMIT_35
+      - CLOSURE
+      - CLOSURE_ENTRY_EXIT
+      - STRONG_ELECTRIC_CHARGING_STATION
+      - SHORT_TERM_ROADWORKS
+      - ELECTRIC_CHARGING_STATION
+      type: string
+    LorryParkingFeatureIcon:
+      example:
+        icon: almofont almo-picnic_facility
+        description: Picknickmöglichkeiten
+        style: ""
+      properties:
+        icon:
+          type: string
+        description:
+          type: string
+        style:
+          type: string
+      type: object
+    RoadItem:
+      properties:
+        extent:
+          example: "10.728384054665147,54.00605746113356,10.775848767524598,54.09436740278899"
+          pattern: "-?\\d+(?:\\.\\d+)?,\\s*-?\\d+(?:\\.\\d+)?,\\s*-?\\d+(?:\\.\\d+)?,\\\
+            s*-?\\d+(?:\\.\\d+)?"
+          type: string
+        identifier:
+          format: byte
+          type: string
+        routeRecommendation:
+          items:
+            type: object
+          type: array
+        coordinate:
+          $ref: '#/components/schemas/Coordinate'
+        footer:
+          example:
+          - "Beginn: 29.06.2021 09:00"
+          - "Ende: 28.11.2021 17:00"
+          - ""
+          - Art der Maßnahme:Asphaltdeckenerneuerung
+          - |-
+            Einschränkungen:Es steht nur 1 Fahrstreifen zur Verfügung.
+
+            Vollsperrung der AS Eutin Ostseite vom 17.07.2021 - 15.09.2021.
+
+            Vollsperrung der AS Scharbeutz Ostseite vom 16.09.2021 - 17.11.2021.
+          - |
+            Maximale Durchfahrsbreite: 3.25
+          items:
+            type: string
+          type: array
+        icon:
+          type: string
+        isBlocked:
+          type: string
+        description:
+          example:
+          - "Beginn: 29.06.2021 09:00"
+          - "Ende: 28.11.2021 17:00"
+          - ""
+          - Art der Maßnahme:Asphaltdeckenerneuerung
+          - |-
+            Einschränkungen:Es steht nur 1 Fahrstreifen zur Verfügung.
+
+            Vollsperrung der AS Eutin Ostseite vom 17.07.2021 - 15.09.2021.
+
+            Vollsperrung der AS Scharbeutz Ostseite vom 16.09.2021 - 17.11.2021.
+          - |
+            Maximale Durchfahrsbreite: 3.25
+          items:
+            type: string
+          type: array
+        title:
+          type: string
+        point:
+          example: "10.729057,54.006057"
+          pattern: "-?\\d+(?:\\.\\d+)?,\\s*-?\\d+(?:\\.\\d+)?"
+          type: string
+        display_type:
+          $ref: '#/components/schemas/DisplayType'
+        lorryParkingFeatureIcons:
+          items:
+            $ref: '#/components/schemas/LorryParkingFeatureIcon'
+          type: array
+        future:
+          type: boolean
+        subtitle:
+          type: string
+      type: object
+    RoadEvent:
+      allOf:
+      - $ref: '#/components/schemas/RoadItem'
+      - $ref: '#/components/schemas/RoadEvent_allOf'
+    Roadworks:
+      example:
+        roadworks:
+        - extent: "10.728384054665147,54.00605746113356,10.775848767524598,54.09436740278899"
+          identifier: Uk9BRFdPUktTX19tZG0uc2hfXzYzMTU=
+          routeRecommendation: []
+          coordinate:
+            lat: "54.006057"
+            long: "10.729057"
+          footer: []
+          icon: "123"
+          isBlocked: "false"
+          description:
+          - "Beginn: 29.06.2021 09:00"
+          - "Ende: 28.11.2021 17:00"
+          - ""
+          - Art der Maßnahme:Asphaltdeckenerneuerung
+          - |-
+            Einschränkungen:Es steht nur 1 Fahrstreifen zur Verfügung.
+
+            Vollsperrung der AS Eutin Ostseite vom 17.07.2021 - 15.09.2021.
+
+            Vollsperrung der AS Scharbeutz Ostseite vom 16.09.2021 - 17.11.2021.
+          - |
+            Maximale Durchfahrsbreite: 3.25
+          title: A1 | AS Pansdorf (17) - AS Neustadt-Mitte (14)
+          point: "10.729057,54.006057"
+          display_type: ROADWORKS
+          lorryParkingFeatureIcons: []
+          future: false
+          subtitle: Lübeck Richtung Fehmarn
+          startTimestamp: 2021-06-29T09:00:00.000+0200
+        - extent: "10.728384054665147,54.00605746113356,10.775848767524598,54.09436740278899"
+          identifier: Uk9BRFdPUktTX19tZG0uc2hfXzYzMTU=
+          routeRecommendation: []
+          coordinate:
+            lat: "54.006057"
+            long: "10.729057"
+          footer: []
+          icon: "123"
+          isBlocked: "false"
+          description:
+          - "Beginn: 29.06.2021 09:00"
+          - "Ende: 28.11.2021 17:00"
+          - ""
+          - Art der Maßnahme:Asphaltdeckenerneuerung
+          - |-
+            Einschränkungen:Es steht nur 1 Fahrstreifen zur Verfügung.
+
+            Vollsperrung der AS Eutin Ostseite vom 17.07.2021 - 15.09.2021.
+
+            Vollsperrung der AS Scharbeutz Ostseite vom 16.09.2021 - 17.11.2021.
+          - |
+            Maximale Durchfahrsbreite: 3.25
+          title: A1 | AS Pansdorf (17) - AS Neustadt-Mitte (14)
+          point: "10.729057,54.006057"
+          display_type: ROADWORKS
+          lorryParkingFeatureIcons: []
+          future: false
+          subtitle: Lübeck Richtung Fehmarn
+          startTimestamp: 2021-06-29T09:00:00.000+0200
+      properties:
+        roadworks:
+          items:
+            $ref: '#/components/schemas/Roadwork'
+          type: array
+      type: object
+    Roadwork:
+      allOf:
+      - $ref: '#/components/schemas/RoadEvent'
+      example:
+        extent: "10.728384054665147,54.00605746113356,10.775848767524598,54.09436740278899"
+        identifier: Uk9BRFdPUktTX19tZG0uc2hfXzYzMTU=
+        routeRecommendation: []
+        coordinate:
+          lat: "54.006057"
+          long: "10.729057"
+        footer: []
+        icon: "123"
+        isBlocked: "false"
+        description:
+        - "Beginn: 29.06.2021 09:00"
+        - "Ende: 28.11.2021 17:00"
+        - ""
+        - Art der Maßnahme:Asphaltdeckenerneuerung
+        - |-
+          Einschränkungen:Es steht nur 1 Fahrstreifen zur Verfügung.
+
+          Vollsperrung der AS Eutin Ostseite vom 17.07.2021 - 15.09.2021.
+
+          Vollsperrung der AS Scharbeutz Ostseite vom 16.09.2021 - 17.11.2021.
+        - |
+          Maximale Durchfahrsbreite: 3.25
+        title: A1 | AS Pansdorf (17) - AS Neustadt-Mitte (14)
+        point: "10.729057,54.006057"
+        display_type: ROADWORKS
+        lorryParkingFeatureIcons: []
+        future: false
+        subtitle: Lübeck Richtung Fehmarn
+        startTimestamp: 2021-06-29T09:00:00.000+0200
+    Webcams:
+      example:
+        webcam:
+        - extent: "6.861151,50.987423,6.861151,50.987423"
+          identifier: V0VCQ0FNX19OUldfU2lsYS1TaWduYWxiYXVfMTAxMDgxMDk4ODE2NDgyOTQ4NTQ=
+          routeRecommendation: []
+          coordinate:
+            lat: "50.987423"
+            long: "6.861151"
+          footer:
+          - "ID: WEBCAM__NRW_Sila-Signalbau_10108109881648294854"
+          icon: webcam
+          isBlocked: "false"
+          description: []
+          title: A1 | ID005 AK Köln-Nord
+          operator: NRW
+          point: "6.861151,50.987423"
+          display_type: WEBCAM
+          lorryParkingFeatureIcons: []
+          future: false
+          imageurl: https://www.verkehr.nrw/webcams/10108109881648294854.jpg
+          subtitle: Blickrichtung Dortmund
+          linkurl: https://www.blitzvideoserver.de/player_strassennrw.html?serverip=62.113.210.7&serverapp=strassennrw-rtplive&streamname=10108109881648294854
+        - extent: "6.861151,50.987423,6.861151,50.987423"
+          identifier: V0VCQ0FNX19OUldfU2lsYS1TaWduYWxiYXVfMTAxMDgxMDk4ODE2NDgyOTQ4NTQ=
+          routeRecommendation: []
+          coordinate:
+            lat: "50.987423"
+            long: "6.861151"
+          footer:
+          - "ID: WEBCAM__NRW_Sila-Signalbau_10108109881648294854"
+          icon: webcam
+          isBlocked: "false"
+          description: []
+          title: A1 | ID005 AK Köln-Nord
+          operator: NRW
+          point: "6.861151,50.987423"
+          display_type: WEBCAM
+          lorryParkingFeatureIcons: []
+          future: false
+          imageurl: https://www.verkehr.nrw/webcams/10108109881648294854.jpg
+          subtitle: Blickrichtung Dortmund
+          linkurl: https://www.blitzvideoserver.de/player_strassennrw.html?serverip=62.113.210.7&serverapp=strassennrw-rtplive&streamname=10108109881648294854
+      properties:
+        webcam:
+          items:
+            $ref: '#/components/schemas/Webcam'
+          type: array
+      type: object
+    Webcam:
+      allOf:
+      - $ref: '#/components/schemas/RoadItem'
+      - $ref: '#/components/schemas/Webcam_allOf'
+      example:
+        extent: "6.861151,50.987423,6.861151,50.987423"
+        identifier: V0VCQ0FNX19OUldfU2lsYS1TaWduYWxiYXVfMTAxMDgxMDk4ODE2NDgyOTQ4NTQ=
+        routeRecommendation: []
+        coordinate:
+          lat: "50.987423"
+          long: "6.861151"
+        footer:
+        - "ID: WEBCAM__NRW_Sila-Signalbau_10108109881648294854"
+        icon: webcam
+        isBlocked: "false"
+        description: []
+        title: A1 | ID005 AK Köln-Nord
+        operator: NRW
+        point: "6.861151,50.987423"
+        display_type: WEBCAM
+        lorryParkingFeatureIcons: []
+        future: false
+        imageurl: https://www.verkehr.nrw/webcams/10108109881648294854.jpg
+        subtitle: Blickrichtung Dortmund
+        linkurl: https://www.blitzvideoserver.de/player_strassennrw.html?serverip=62.113.210.7&serverapp=strassennrw-rtplive&streamname=10108109881648294854
+    ParkingLorries:
+      example:
+        parking_lorry:
+        - extent: "10.979849815368652,54.362571716308594,10.979849815368652,54.362571716308594"
+          identifier: UEFSS0lOR19fbWRtLmxvcnJ5LnBhcmtpbmdfX0RFLVNILTAwMTEwOA==
+          routeRecommendation: []
+          coordinate:
+            lat: "54.362572"
+            long: "10.979850"
+          footer: []
+          icon: 314-50
+          isBlocked: "false"
+          description:
+          - "PKW Stellplätze: 21 "
+          - "LKW Stellplätze: 20 "
+          title: A 1 | Richtung Puttgarden
+          point: "10.979850,54.362572"
+          display_type: PARKING
+          lorryParkingFeatureIcons:
+          - icon: almofont almo-picnic_facility
+            description: Picknickmöglichkeiten
+            style: ""
+          - icon: almofont almo-restroom
+            description: Toilette vorhanden
+            style: ""
+          future: false
+          subtitle: (Ostseeblick S)
+        - extent: "10.979849815368652,54.362571716308594,10.979849815368652,54.362571716308594"
+          identifier: UEFSS0lOR19fbWRtLmxvcnJ5LnBhcmtpbmdfX0RFLVNILTAwMTEwOA==
+          routeRecommendation: []
+          coordinate:
+            lat: "54.362572"
+            long: "10.979850"
+          footer: []
+          icon: 314-50
+          isBlocked: "false"
+          description:
+          - "PKW Stellplätze: 21 "
+          - "LKW Stellplätze: 20 "
+          title: A 1 | Richtung Puttgarden
+          point: "10.979850,54.362572"
+          display_type: PARKING
+          lorryParkingFeatureIcons:
+          - icon: almofont almo-picnic_facility
+            description: Picknickmöglichkeiten
+            style: ""
+          - icon: almofont almo-restroom
+            description: Toilette vorhanden
+            style: ""
+          future: false
+          subtitle: (Ostseeblick S)
+      properties:
+        parking_lorry:
+          items:
+            $ref: '#/components/schemas/ParkingLorry'
+          type: array
+      type: object
+    ParkingLorry:
+      allOf:
+      - $ref: '#/components/schemas/RoadItem'
+      example:
+        extent: "10.979849815368652,54.362571716308594,10.979849815368652,54.362571716308594"
+        identifier: UEFSS0lOR19fbWRtLmxvcnJ5LnBhcmtpbmdfX0RFLVNILTAwMTEwOA==
+        routeRecommendation: []
+        coordinate:
+          lat: "54.362572"
+          long: "10.979850"
+        footer: []
+        icon: 314-50
+        isBlocked: "false"
+        description:
+        - "PKW Stellplätze: 21 "
+        - "LKW Stellplätze: 20 "
+        title: A 1 | Richtung Puttgarden
+        point: "10.979850,54.362572"
+        display_type: PARKING
+        lorryParkingFeatureIcons:
+        - icon: almofont almo-picnic_facility
+          description: Picknickmöglichkeiten
+          style: ""
+        - icon: almofont almo-restroom
+          description: Toilette vorhanden
+          style: ""
+        future: false
+        subtitle: (Ostseeblick S)
+    Warnings:
+      example:
+        warning:
+        - extent: "8.61785,52.97344,8.69904,53.00507"
+          identifier: V0FSTklOR19fbWRtLnZpel9fTE1TLU5JL3JfTE1TLU5JLzIxMjI2MF9EICBOSSBMTVMtTkkgIC4w
+          routeRecommendation: []
+          coordinate:
+            lat: "53.005070"
+            long: "8.699040"
+          footer: []
+          icon: "101"
+          isBlocked: "false"
+          description:
+          - "Beginn: 25.05.2021 00:00"
+          - "Ende: 30.11.2021 23:59"
+          - ""
+          - A1 Bremen Richtung Osnabrück
+          - zwischen Dreieck Stuhr und Groß Ippener
+          - "Fahrbahnverengung, geänderte Verkehrsführung, Staugefahr, bis voraussichtlich\
+            \ 30.11.2021"
+          - Erweiterung PWC Kiekut.
+          title: A1 | AS Delmenhorst-Ost (58b) - AS Groß Ippener (59)
+          point: "8.699040,53.005070"
+          display_type: WARNING
+          lorryParkingFeatureIcons: []
+          future: false
+          subtitle: Bremen Richtung Osnabrück
+          startTimestamp: 2021-05-25T00:00:00.000+0200
+        - extent: "8.61785,52.97344,8.69904,53.00507"
+          identifier: V0FSTklOR19fbWRtLnZpel9fTE1TLU5JL3JfTE1TLU5JLzIxMjI2MF9EICBOSSBMTVMtTkkgIC4w
+          routeRecommendation: []
+          coordinate:
+            lat: "53.005070"
+            long: "8.699040"
+          footer: []
+          icon: "101"
+          isBlocked: "false"
+          description:
+          - "Beginn: 25.05.2021 00:00"
+          - "Ende: 30.11.2021 23:59"
+          - ""
+          - A1 Bremen Richtung Osnabrück
+          - zwischen Dreieck Stuhr und Groß Ippener
+          - "Fahrbahnverengung, geänderte Verkehrsführung, Staugefahr, bis voraussichtlich\
+            \ 30.11.2021"
+          - Erweiterung PWC Kiekut.
+          title: A1 | AS Delmenhorst-Ost (58b) - AS Groß Ippener (59)
+          point: "8.699040,53.005070"
+          display_type: WARNING
+          lorryParkingFeatureIcons: []
+          future: false
+          subtitle: Bremen Richtung Osnabrück
+          startTimestamp: 2021-05-25T00:00:00.000+0200
+      properties:
+        warning:
+          items:
+            $ref: '#/components/schemas/Warning'
+          type: array
+      type: object
+    Warning:
+      allOf:
+      - $ref: '#/components/schemas/RoadEvent'
+      example:
+        extent: "8.61785,52.97344,8.69904,53.00507"
+        identifier: V0FSTklOR19fbWRtLnZpel9fTE1TLU5JL3JfTE1TLU5JLzIxMjI2MF9EICBOSSBMTVMtTkkgIC4w
+        routeRecommendation: []
+        coordinate:
+          lat: "53.005070"
+          long: "8.699040"
+        footer: []
+        icon: "101"
+        isBlocked: "false"
+        description:
+        - "Beginn: 25.05.2021 00:00"
+        - "Ende: 30.11.2021 23:59"
+        - ""
+        - A1 Bremen Richtung Osnabrück
+        - zwischen Dreieck Stuhr und Groß Ippener
+        - "Fahrbahnverengung, geänderte Verkehrsführung, Staugefahr, bis voraussichtlich\
+          \ 30.11.2021"
+        - Erweiterung PWC Kiekut.
+        title: A1 | AS Delmenhorst-Ost (58b) - AS Groß Ippener (59)
+        point: "8.699040,53.005070"
+        display_type: WARNING
+        lorryParkingFeatureIcons: []
+        future: false
+        subtitle: Bremen Richtung Osnabrück
+        startTimestamp: 2021-05-25T00:00:00.000+0200
+    Closures:
+      example:
+        closure:
+        - extent: "6.95325,51.02996,6.96491,51.03644"
+          identifier: Q0xPU1VSRV9fbWRtLnZpel9fTE1TLU5XL3JfTE1TLU5XLzMxNTEyMV9EICBOVyBMTVMtTlcuMA==
+          routeRecommendation: []
+          coordinate:
+            lat: "51.036440"
+            long: "6.964910"
+          footer: []
+          icon: 262-2
+          isBlocked: "false"
+          description:
+          - "Beginn: 20.06.2021 14:19"
+          - "Ende: 31.12.2025 23:59"
+          - ""
+          - A1 Dortmund - Köln
+          - Leverkusener Brücke
+          - "in beiden Richtungen gesperrt für LKW über 3,5 t, bis 31.12.2025"
+          title: A1 | AK Leverkusen-West (99) - AS Köln-Niehl (100)
+          point: "6.964910,51.036440"
+          display_type: WEIGHT_LIMIT_35
+          lorryParkingFeatureIcons: []
+          future: false
+          subtitle: Dortmund Richtung Köln
+          startTimestamp: 2021-06-20T14:19:26.000+0200
+        - extent: "6.95325,51.02996,6.96491,51.03644"
+          identifier: Q0xPU1VSRV9fbWRtLnZpel9fTE1TLU5XL3JfTE1TLU5XLzMxNTEyMV9EICBOVyBMTVMtTlcuMA==
+          routeRecommendation: []
+          coordinate:
+            lat: "51.036440"
+            long: "6.964910"
+          footer: []
+          icon: 262-2
+          isBlocked: "false"
+          description:
+          - "Beginn: 20.06.2021 14:19"
+          - "Ende: 31.12.2025 23:59"
+          - ""
+          - A1 Dortmund - Köln
+          - Leverkusener Brücke
+          - "in beiden Richtungen gesperrt für LKW über 3,5 t, bis 31.12.2025"
+          title: A1 | AK Leverkusen-West (99) - AS Köln-Niehl (100)
+          point: "6.964910,51.036440"
+          display_type: WEIGHT_LIMIT_35
+          lorryParkingFeatureIcons: []
+          future: false
+          subtitle: Dortmund Richtung Köln
+          startTimestamp: 2021-06-20T14:19:26.000+0200
+      properties:
+        closure:
+          items:
+            $ref: '#/components/schemas/Closure'
+          type: array
+      type: object
+    Closure:
+      allOf:
+      - $ref: '#/components/schemas/RoadEvent'
+      example:
+        extent: "6.95325,51.02996,6.96491,51.03644"
+        identifier: Q0xPU1VSRV9fbWRtLnZpel9fTE1TLU5XL3JfTE1TLU5XLzMxNTEyMV9EICBOVyBMTVMtTlcuMA==
+        routeRecommendation: []
+        coordinate:
+          lat: "51.036440"
+          long: "6.964910"
+        footer: []
+        icon: 262-2
+        isBlocked: "false"
+        description:
+        - "Beginn: 20.06.2021 14:19"
+        - "Ende: 31.12.2025 23:59"
+        - ""
+        - A1 Dortmund - Köln
+        - Leverkusener Brücke
+        - "in beiden Richtungen gesperrt für LKW über 3,5 t, bis 31.12.2025"
+        title: A1 | AK Leverkusen-West (99) - AS Köln-Niehl (100)
+        point: "6.964910,51.036440"
+        display_type: WEIGHT_LIMIT_35
+        lorryParkingFeatureIcons: []
+        future: false
+        subtitle: Dortmund Richtung Köln
+        startTimestamp: 2021-06-20T14:19:26.000+0200
+    ElectricChargingStations:
+      example:
+        electric_charging_station:
+        - extent: "9.176298,53.090847,9.176298,53.090847"
+          identifier: RUxFQ1RSSUNfQ0hBUkdJTkdfU1RBVElPTl9fMTI2OTk=
+          routeRecommendation: []
+          coordinate:
+            lat: "53.090847"
+            long: "9.176298"
+          footer: []
+          icon: charging_plug_strong
+          isBlocked: "false"
+          description:
+          - A1 | Bremen | Raststätte Grundbergsee Nord
+          - 27376 Sottrum
+          - ""
+          - 'Ladepunkt 1:'
+          - AC Kupplung Typ 2
+          - 43 kW
+          - ""
+          - 'Ladepunkt 2:'
+          - "DC Kupplung Combo, DC CHAdeMO"
+          - 50 kW
+          title: A1 | Bremen | Raststätte Grundbergsee Nord
+          point: "9.176298,53.090847"
+          display_type: STRONG_ELECTRIC_CHARGING_STATION
+          lorryParkingFeatureIcons: []
+          future: false
+          subtitle: Schnellladeeinrichtung
+        - extent: "9.176298,53.090847,9.176298,53.090847"
+          identifier: RUxFQ1RSSUNfQ0hBUkdJTkdfU1RBVElPTl9fMTI2OTk=
+          routeRecommendation: []
+          coordinate:
+            lat: "53.090847"
+            long: "9.176298"
+          footer: []
+          icon: charging_plug_strong
+          isBlocked: "false"
+          description:
+          - A1 | Bremen | Raststätte Grundbergsee Nord
+          - 27376 Sottrum
+          - ""
+          - 'Ladepunkt 1:'
+          - AC Kupplung Typ 2
+          - 43 kW
+          - ""
+          - 'Ladepunkt 2:'
+          - "DC Kupplung Combo, DC CHAdeMO"
+          - 50 kW
+          title: A1 | Bremen | Raststätte Grundbergsee Nord
+          point: "9.176298,53.090847"
+          display_type: STRONG_ELECTRIC_CHARGING_STATION
+          lorryParkingFeatureIcons: []
+          future: false
+          subtitle: Schnellladeeinrichtung
+      properties:
+        electric_charging_station:
+          items:
+            $ref: '#/components/schemas/ElectricChargingStation'
+          type: array
+      type: object
+    ElectricChargingStation:
+      allOf:
+      - $ref: '#/components/schemas/RoadItem'
+      example:
+        extent: "9.176298,53.090847,9.176298,53.090847"
+        identifier: RUxFQ1RSSUNfQ0hBUkdJTkdfU1RBVElPTl9fMTI2OTk=
+        routeRecommendation: []
+        coordinate:
+          lat: "53.090847"
+          long: "9.176298"
+        footer: []
+        icon: charging_plug_strong
+        isBlocked: "false"
+        description:
+        - A1 | Bremen | Raststätte Grundbergsee Nord
+        - 27376 Sottrum
+        - ""
+        - 'Ladepunkt 1:'
+        - AC Kupplung Typ 2
+        - 43 kW
+        - ""
+        - 'Ladepunkt 2:'
+        - "DC Kupplung Combo, DC CHAdeMO"
+        - 50 kW
+        title: A1 | Bremen | Raststätte Grundbergsee Nord
+        point: "9.176298,53.090847"
+        display_type: STRONG_ELECTRIC_CHARGING_STATION
+        lorryParkingFeatureIcons: []
+        future: false
+        subtitle: Schnellladeeinrichtung
+    RoadEvent_allOf:
+      properties:
+        startTimestamp:
+          format: date-time
+          type: string
+      type: object
+      example: null
+    Webcam_allOf:
+      properties:
+        operator:
+          type: string
+        imageurl:
+          format: uri
+          type: string
+        linkurl:
+          format: uri
+          type: string
+      type: object
+      example: null
